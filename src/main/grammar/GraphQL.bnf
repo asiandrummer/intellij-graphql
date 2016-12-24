@@ -1,0 +1,137 @@
+{
+  generate=[names="long" tokenAccessors="no"]
+  parserClass="com.intellij.lang.graphql.GraphQLParser"
+
+  implements="com.intellij.lang.graphql.psi.GraphQLElement"
+  extends="com.intellij.lang.graphql.psi.impl.GraphQLElementImpl"
+
+  psiClassPrefix="GraphQL"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.intellij.lang.graphql.psi"
+  psiImplPackage="com.intellij.lang.graphql.psi.impl"
+
+  elementTypeHolderClass="com.intellij.lang.graphql.psi.GraphQLElementTypes"
+  elementTypeClass="com.intellij.lang.graphql.psi.GraphQLCompositeElementType"
+  tokenTypeClass="com.intellij.lang.graphql.psi.GraphQLTokenType"
+
+  psiImplUtilClass="com.intellij.lang.graphql.psi.impl.GraphQLPsiImplUtil"
+
+  implements("operationDefinition|fragmentDefinition|fragmentSpread|variable|field|argument|directive")="com.intellij.lang.graphql.psi.GraphQLNamedElement"
+  mixin("operationDefinition|fragmentDefinition|fragmentSpread|variable|field|argument|directive")="com.intellij.lang.graphql.psi.impl.GraphQLNamedElementImpl"
+
+  tokens = [
+    BANG="!"
+    DOLLAR="$"
+    PAREN_L="("
+    PAREN_R=")"
+    SPREAD="..."
+    COLON=":"
+    EQUALS="="
+    AT="@"
+    BRACKET_L="["
+    BRACKET_R="]"
+    BRACE_L="{"
+    PIPE="|"
+    BRACE_R="}"
+
+    WHITE_SPACE='regexp:\s+'
+    KEYWORD="regexp:query|mutation|subscription|fragment|on"
+    NAME='regexp:[_A-Za-z][_0-9A-Za-z]*'
+    NUMBER='regexp:\d+(\.\d*)?'
+    STRING="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+    COMMENT='regexp:#.*'
+  ]
+}
+
+queryDocument ::= definition*
+
+private definition ::= shorthandQueryDefinition | operationDefinition | fragmentDefinition {recoverWhile=definitionRecover}
+private definitionRecover ::= !(operationType | 'fragment')
+
+operationDefinition ::= operationType identifier? variableDefinitions? directives? selectionSet {
+  pin=1 methods=[nameIdentifier="identifier" getName setName variableDefinitions="variableDefinition" directives="directive"]
+}
+
+shorthandQueryDefinition ::= selectionSet {
+  extends=operationDefinition
+}
+
+operationType ::= 'query' | 'mutation' | 'subscription'
+
+selectionSet ::= '{' selection* '}' {pin=1 methods=[selections="selection"]}
+
+selection ::= aliasedField | field | fragmentSpread | inlineFragment
+
+field ::= identifier arguments? directives? selectionSet? {
+  extends=selection methods=[nameIdentifier="identifier" getName setName arguments="argument" directives="directive"]
+}
+
+aliasedField ::= identifier ':' identifier arguments? directives? selectionSet? {
+  extends=field methods=[identifier="" aliasIdentifier="identifier[0]" nameIdentifier="identifier[1]"]
+}
+
+private arguments ::= '(' argument* ')' {pin=1}
+
+argument ::= identifier ':' value {methods=[nameIdentifier="identifier" getName setName]}
+
+fragmentSpread ::= '...' fragmentName directives? {
+  extends=selection methods=[nameIdentifier="identifier" getName setName directives="directive"]
+}
+
+private fragmentName ::= !'on' identifier
+
+fragmentDefinition ::= 'fragment' fragmentName typeCondition directives? selectionSet {
+  pin=1 methods=[nameIdentifier="identifier" getName setName typeCondition="namedType" directives="directive"]
+}
+
+private typeCondition ::= 'on' namedType
+
+inlineFragment ::= '...' typeCondition? directives? selectionSet {
+  extends=selection methods=[typeCondition="namedType" directives="directive" selectionSet="selection"]
+}
+
+value ::= variableReference | numberValue | stringValue | booleanValue | nullValue | enumValue | listValue | objectValue
+
+variableReference ::= variable {extends=value}
+
+variable ::= '$' identifier {pin=1 methods=[nameIdentifier="identifier" getName setName]}
+
+numberValue ::= NUMBER {extends=value}
+
+stringValue ::= STRING {extends=value}
+
+booleanValue ::= 'true' | 'false' {extends=value}
+
+nullValue ::= 'null' {extends=value}
+
+enumValue ::= !('true' | 'false' | 'null') identifier {extends=value methods=[nameIdentifier="identifier"]}
+
+listValue ::= '[' value* ']' {
+  pin=1 extends=value methods=[values="value"]
+}
+
+objectValue ::= '{' objectField* '}' {
+   pin=1 extends=value methods=[fields="objectField"]
+ }
+
+objectField ::= identifier ':' value {methods=[nameIdentifier="identifier"]}
+
+private variableDefinitions ::= '(' variableDefinition* ')' {pin=1}
+
+variableDefinition ::= variable ':' type defaultValue? {methods=[nameIdentifier="identifier" getName setName defaultValue="value"]}
+
+private defaultValue ::= '=' value
+
+type ::=  listType | nonNullType | namedType
+
+namedType ::= identifier {extends=type methods=[nameIdentifier="identifier"]}
+
+listType ::= '[' type ']' {pin=1 extends=type methods=[ofType="type"]}
+
+nonNullType ::= (namedType | listType) '!' {extends=type methods=[ofType="type"]}
+
+private directives ::= directive*
+
+directive ::= '@' identifier arguments? {methods=[nameIdentifier="identifier" getName setName arguments="argument"]}
+
+identifier ::= NAME

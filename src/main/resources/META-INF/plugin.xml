@@ -1,0 +1,33 @@
+<idea-plugin version="2">
+  <id>com.intellij.lang.graphql</id>
+  <name>GraphQL</name>
+  <category>Custom Languages</category>
+  <vendor url="https://github.com/apollostack">Apollo GraphQL</vendor>
+  <version>1.0</version>
+
+  <description><![CDATA[GraphQL language support]]></description>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="145.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory implementation="com.intellij.lang.graphql.GraphQLFileTypeFactory"/>
+    <lang.parserDefinition language="GraphQL" implementationClass="com.intellij.lang.graphql.GraphQLParserDefinition"/>
+
+    <lang.syntaxHighlighterFactory language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLSyntaxHighlighterFactory"/>
+    <annotator language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLSyntaxAnnotator" />
+    <colorSettingsPage implementation="com.intellij.lang.graphql.ide.GraphQLColorSettingsPage"/>
+
+    <lang.braceMatcher language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLBraceMatcher" />
+    <lang.formatter language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLFormattingModelBuilder"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
