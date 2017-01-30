@@ -2,7 +2,7 @@
   <id>com.intellij.lang.graphql</id>
   <name>GraphQL</name>
   <category>Custom Languages</category>
-  <vendor url="https://github.com/apollostack">Apollo GraphQL</vendor>
+  <vendor url="http://dev.apollodata.com">Apollo GraphQL</vendor>
   <version>1.0</version>
 
   <description><![CDATA[GraphQL language support]]></description>
