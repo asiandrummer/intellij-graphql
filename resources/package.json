@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "graphql-language-service": "^0.0.8"
+  }
+}

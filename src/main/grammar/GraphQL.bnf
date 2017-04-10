@@ -58,7 +58,7 @@ shorthandQueryDefinition ::= selectionSet {
 
 operationType ::= 'query' | 'mutation' | 'subscription'
 
-selectionSet ::= '{' selection* '}' {pin=1 methods=[selections="selection"]}
+selectionSet ::= '{' selection+ '}' {pin=1 methods=[selections="selection"]}
 
 selection ::= aliasedField | field | fragmentSpread | inlineFragment
 
@@ -70,7 +70,7 @@ aliasedField ::= identifier ':' identifier arguments? directives? selectionSet? 
   extends=field methods=[identifier="" aliasIdentifier="identifier[0]" nameIdentifier="identifier[1]"]
 }
 
-private arguments ::= '(' argument* ')' {pin=1}
+private arguments ::= '(' argument+ ')' {pin=1}
 
 argument ::= identifier ':' value {methods=[nameIdentifier="identifier" getName setName]}
 
@@ -106,17 +106,17 @@ nullValue ::= 'null' {extends=value}
 
 enumValue ::= !('true' | 'false' | 'null') identifier {extends=value methods=[nameIdentifier="identifier"]}
 
-listValue ::= '[' value* ']' {
+listValue ::= '[' value+ ']' {
   pin=1 extends=value methods=[values="value"]
 }
 
-objectValue ::= '{' objectField* '}' {
+objectValue ::= '{' objectField+ '}' {
    pin=1 extends=value methods=[fields="objectField"]
  }
 
 objectField ::= identifier ':' value {methods=[nameIdentifier="identifier"]}
 
-private variableDefinitions ::= '(' variableDefinition* ')' {pin=1}
+private variableDefinitions ::= '(' variableDefinition+ ')' {pin=1}
 
 variableDefinition ::= variable ':' type defaultValue? {methods=[nameIdentifier="identifier" getName setName defaultValue="value"]}
 

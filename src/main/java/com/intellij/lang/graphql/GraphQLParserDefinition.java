@@ -16,6 +16,10 @@ public class GraphQLParserDefinition implements ParserDefinition {
   public static final IFileElementType FILE =
       new IFileElementType(Language.<GraphQLLanguage>findInstance(GraphQLLanguage.class));
 
+  public GraphQLParserDefinition() {
+    super();
+  }
+
   @NotNull
   @Override
   public Lexer createLexer(Project project) {

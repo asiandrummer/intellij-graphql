@@ -183,7 +183,7 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '(' argument* ')'
+  // '(' argument+ ')'
   static boolean arguments(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "arguments")) return false;
     if (!nextTokenIs(builder, PAREN_L)) return false;
@@ -197,16 +197,20 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
     return result || pinned;
   }
 
-  // argument*
+  // argument+
   private static boolean arguments_1(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "arguments_1")) return false;
+    boolean result;
+    Marker marker = enter_section_(builder);
+    result = argument(builder, level + 1);
     int pos = current_position_(builder);
-    while (true) {
+    while (result) {
       if (!argument(builder, level + 1)) break;
       if (!empty_element_parsed_guard_(builder, "arguments_1", pos)) break;
       pos = current_position_(builder);
     }
-    return true;
+    exit_section_(builder, marker, null, result);
+    return result;
   }
 
   /* ********************************************************** */
@@ -498,7 +502,7 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '[' value* ']'
+  // '[' value+ ']'
   public static boolean listValue(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "listValue")) return false;
     if (!nextTokenIs(builder, BRACKET_L)) return false;
@@ -512,16 +516,20 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
     return result || pinned;
   }
 
-  // value*
+  // value+
   private static boolean listValue_1(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "listValue_1")) return false;
+    boolean result;
+    Marker marker = enter_section_(builder);
+    result = value(builder, level + 1);
     int pos = current_position_(builder);
-    while (true) {
+    while (result) {
       if (!value(builder, level + 1)) break;
       if (!empty_element_parsed_guard_(builder, "listValue_1", pos)) break;
       pos = current_position_(builder);
     }
-    return true;
+    exit_section_(builder, marker, null, result);
+    return result;
   }
 
   /* ********************************************************** */
@@ -598,7 +606,7 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '{' objectField* '}'
+  // '{' objectField+ '}'
   public static boolean objectValue(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "objectValue")) return false;
     if (!nextTokenIs(builder, BRACE_L)) return false;
@@ -612,16 +620,20 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
     return result || pinned;
   }
 
-  // objectField*
+  // objectField+
   private static boolean objectValue_1(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "objectValue_1")) return false;
+    boolean result;
+    Marker marker = enter_section_(builder);
+    result = objectField(builder, level + 1);
     int pos = current_position_(builder);
-    while (true) {
+    while (result) {
       if (!objectField(builder, level + 1)) break;
       if (!empty_element_parsed_guard_(builder, "objectValue_1", pos)) break;
       pos = current_position_(builder);
     }
-    return true;
+    exit_section_(builder, marker, null, result);
+    return result;
   }
 
   /* ********************************************************** */
@@ -703,7 +715,7 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '{' selection* '}'
+  // '{' selection+ '}'
   public static boolean selectionSet(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "selectionSet")) return false;
     if (!nextTokenIs(builder, BRACE_L)) return false;
@@ -717,16 +729,20 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
     return result || pinned;
   }
 
-  // selection*
+  // selection+
   private static boolean selectionSet_1(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "selectionSet_1")) return false;
+    boolean result;
+    Marker marker = enter_section_(builder);
+    result = selection(builder, level + 1);
     int pos = current_position_(builder);
-    while (true) {
+    while (result) {
       if (!selection(builder, level + 1)) break;
       if (!empty_element_parsed_guard_(builder, "selectionSet_1", pos)) break;
       pos = current_position_(builder);
     }
-    return true;
+    exit_section_(builder, marker, null, result);
+    return result;
   }
 
   /* ********************************************************** */
@@ -834,7 +850,7 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '(' variableDefinition* ')'
+  // '(' variableDefinition+ ')'
   static boolean variableDefinitions(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "variableDefinitions")) return false;
     if (!nextTokenIs(builder, PAREN_L)) return false;
@@ -848,16 +864,20 @@ public class GraphQLParser implements PsiParser, LightPsiParser {
     return result || pinned;
   }
 
-  // variableDefinition*
+  // variableDefinition+
   private static boolean variableDefinitions_1(PsiBuilder builder, int level) {
     if (!recursion_guard_(builder, level, "variableDefinitions_1")) return false;
+    boolean result;
+    Marker marker = enter_section_(builder);
+    result = variableDefinition(builder, level + 1);
     int pos = current_position_(builder);
-    while (true) {
+    while (result) {
       if (!variableDefinition(builder, level + 1)) break;
       if (!empty_element_parsed_guard_(builder, "variableDefinitions_1", pos)) break;
       pos = current_position_(builder);
     }
-    return true;
+    exit_section_(builder, marker, null, result);
+    return result;
   }
 
   /* ********************************************************** */

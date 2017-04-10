@@ -3,7 +3,7 @@
   <name>GraphQL</name>
   <category>Custom Languages</category>
   <vendor url="http://dev.apollodata.com">Apollo GraphQL</vendor>
-  <version>1.0</version>
+  <version>0.0.1</version>
 
   <description><![CDATA[GraphQL language support]]></description>
 
@@ -15,19 +15,27 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="com.intellij.lang.graphql.GraphQLFileTypeFactory"/>
-    <lang.parserDefinition language="GraphQL" implementationClass="com.intellij.lang.graphql.GraphQLParserDefinition"/>
+    <projectService serviceInterface="com.intellij.lang.graphql.ide.GraphQLProjectService" serviceImplementation="com.intellij.lang.graphql.ide.GraphQLProjectService" />
 
-    <lang.syntaxHighlighterFactory language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLSyntaxHighlighterFactory"/>
+    <fileTypeFactory implementation="com.intellij.lang.graphql.GraphQLFileTypeFactory"/>
+
     <annotator language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLSyntaxAnnotator" />
+    <externalAnnotator language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLDiagnosticsAnnotator" />
     <colorSettingsPage implementation="com.intellij.lang.graphql.ide.GraphQLColorSettingsPage"/>
 
+    <lang.parserDefinition language="GraphQL" implementationClass="com.intellij.lang.graphql.GraphQLParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLSyntaxHighlighterFactory"/>
     <lang.braceMatcher language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLBraceMatcher" />
     <lang.formatter language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLFormattingModelBuilder"/>
+
+    <completion.contributor language="GraphQL" implementationClass="com.intellij.lang.graphql.ide.GraphQLCompletionContributor" />
+
+    <typedHandler implementation="com.intellij.lang.graphql.handler.GraphQLTypedHandlerDelegate"/>
   </extensions>
 
   <actions>
-    <!-- Add your actions here -->
+    <action id="GraphQL.GraphQLEditorActions" class="com.intellij.lang.graphql.action.GraphQLEditorActions" text="GraphQL Editor Actions"
+            description="GraphQL Editor Actions description">
+    </action>
   </actions>
-
 </idea-plugin>
